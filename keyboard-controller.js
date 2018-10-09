@@ -45,30 +45,101 @@ class MyController {
       KEY_W: 87,
       KEY_X: 88,
       KEY_Y: 89,
-      KEY_Z: 90,
+      KEY_Z: 90
     }
     
     this.bindActions( activities );
 
     // Объект с активностями
-    this.activities = {}
-
+    this.activities = {};
+    
   }
-  
-  //Связывание активности с элементом DOM с использованием механизма handleEvent
 
-  attachToDOM(DOM_target) {
+
+  attachToDOM(DOM_target, action_name) {
     this.DOM_target = DOM_target;
-    DOM_target.addEventListener( 'keydown', this.onKeyDown );
-    DOM_target.addEventListener( 'keyup', this.onKeyUp );
+    var This = this;
+
+    DOM_target.addEventListener( 'keydown', function(event) { This.onKeyDown(event, action_name) }, false );
+    DOM_target.addEventListener( 'keyup', function(event) { This.onKeyUp(event, action_name) }, false );
+  };
+
+  detachOfDOM(DOM_target, action_name) {
+    this.DOM_target = DOM_target;
+    var This = this;
+
+    DOM_target.removeEventListener( 'keydown', function(event) { This.onKeyDown(event, action_name) } );
+    DOM_target.removeEventListener( 'keyup', function(event) { This.onKeyDown(event, action_name) });
+  };
+
+  onKeyDown(event, action_name){
+    this.enableAction(action_name, event)
   }
+
+  onKeyUp(event, action_name){
+    this.disableAction(action_name, event)
+  }
+
+  /////Проверяет активирована ли переданная активность в контроллере???
+
+  isActionActive(action, event){
+    var e = event || window.event;
+    var code = e.keyCode;
+    var obj = this.activities[ action ].keys;
+    var isTrue = false;
+    
+    for (var keys in obj){
+      if( this.isKeyPressed(obj[keys], code) ){
+        isTrue = true;
+      }  
+    }
+
+    if (isTrue) {
+      return true;
+    } else {
+      return false;
+    }
+
+    
+  };
+
+  /////Проверяет нажата ли переданная кнопка в контроллере
+
+  isKeyPressed(key, code){
+    var result = false;
+    if (key === code){
+      result = true;
+    }
+    return result;
+  }
+
+  /////Активирует объявленную активность
+
+  enableAction(action_name, event){
+    console.log(this.isActionActive( action_name, event ));
+
+    if (this.isActionActive( action_name, event ))
+      this.activities[ action_name ].isEnabled = true
+
+    console.log("enableAction: ", this.activities[ action_name ].isEnabled)
+  };
+  
+  /////Дезактивирует объявленную активность
+
+  disableAction(action_name, event){
+    if (this.isActionActive( action_name, event )){
+      this.activities[ action_name ].isEnabled = false;
+    }
+
+    console.log("disableAction: ", this.activities[ action_name ].isEnabled)
+  };
 
   bindActions(activities){
      for( var activity_name in activities ){
       var activity = activities[ activity_name ];
-      this.activities[ activity_name ] {
+      this.activities[ activity_name ] = {
         keys: activity.keys,
-        
+        isEnabled: activity.isEnabled
       }
     }
   }
