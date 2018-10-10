@@ -1,4 +1,5 @@
 class MyController {
+ 
   constructor( activities ) {
     
     // Объект с кодами клавиш
@@ -47,100 +48,143 @@ class MyController {
       KEY_Y: 89,
       KEY_Z: 90
     }
-    
-    this.bindActions( activities );
 
     // Объект с активностями
+    this.actions_by_keycode = {};
     this.activities = {};
-    
+
+    if( activities ) this.bindActions( activities );
+
   }
 
 
-  attachToDOM(DOM_target, action_name) {
-    this.DOM_target = DOM_target;
-    var This = this;
 
-    DOM_target.addEventListener( 'keydown', function(event) { This.onKeyDown(event, action_name) }, false );
-    DOM_target.addEventListener( 'keyup', function(event) { This.onKeyUp(event, action_name) }, false );
+
+  // ============================================================
+
+  bindActions(activities){
+
+    var scope = this;
+
+    for( var activity_name in activities ){
+
+      var activity = activities[ activity_name ];
+
+      scope.activities[ activity_name ] = {
+        keys: activity.keys,
+        is_enabled: activity.is_enabled !== undefined ? activity.is_enabled : true,
+        is_active: false
+      }
+
+      activity.keys.forEach(function(e,i){
+        // console.log('>', i, e );
+        scope.actions_by_keycode[e] = {
+          action: activity_name,
+          is_pressed: false
+        };
+      });
+
+    }
+  }
+
+
+  // ============================================================
+  attachToDOM(DOM_target) {
+    this.DOM_target = DOM_target;
+    DOM_target.addEventListener( 'keydown', this.onKeyDown.bind(this), false );
+    DOM_target.addEventListener( 'keyup', this.onKeyUp.bind(this), false );
   };
 
-  detachOfDOM(DOM_target, action_name) {
-    this.DOM_target = DOM_target;
-    var This = this;
-
-    DOM_target.removeEventListener( 'keydown', function(event) { This.onKeyDown(event, action_name) } );
-    DOM_target.removeEventListener( 'keyup', function(event) { This.onKeyDown(event, action_name) });
+  detachOfDOM(){
+    if( !this.DOM_target ) return;
+    this.DOM_target.removeEventListener( 'keydown', this.onKeyDown );
+    this.DOM_target.removeEventListener( 'keyup', this.onKeyDown );
+    this.DOM_target = undefined;
   };
 
-  onKeyDown(event, action_name){
-    this.enableAction(action_name, event)
+  onKeyDown(event){
+    var activity_name = this.getActivityByKeycode(event.keyCode);
+    if( !activity_name || !this.isActionEnabled(activity_name) ) return;
+    // console.log("onKeyDown: ", event.keyCode, activity_name, this.isActionEnabled(activity_name) );
+    this.actions_by_keycode[event.keyCode].is_pressed = true;
+
+    var action = this.activities[activity_name];
+    if( action.is_active ) return;
+    console.log("activate action: ", activity_name );
+    action.is_active = true;
+    // this.enableAction(activity_name);
   }
 
-  onKeyUp(event, action_name){
-    this.disableAction(action_name, event)
-  }
-
-  /////Проверяет активирована ли переданная активность в контроллере???
-
-  isActionActive(action, event){
-    var e = event || window.event;
-    var code = e.keyCode;
-    var obj = this.activities[ action ].keys;
-    var isTrue = false;
+  onKeyUp(event){
     
-    for (var keys in obj){
-      if( this.isKeyPressed(obj[keys], code) ){
-        isTrue = true;
-      }  
-    }
+    var activity_name = this.getActivityByKeycode(event.keyCode);
+    if( !activity_name || !this.isActionEnabled(activity_name) ) return;
+    // console.log("onKeyUp: ", event.keyCode, activity_name );
+    this.actions_by_keycode[event.keyCode].is_pressed = false;
 
-    if (isTrue) {
-      return true;
-    } else {
-      return false;
-    }
+    var action = this.activities[activity_name];
+    // if( !action.is_enabled ) return;
+    console.log("DEactivate action: ", activity_name );
+    action.is_active = false;
+    // this.disableAction(activity_name);
+  }
 
+
+ 
+
+  ///
+  getActivityByKeycode(keyCode){
+    var activity_name = this.actions_by_keycode[keyCode];
+    if( !activity_name ) return;
+    activity_name = activity_name.action;
+    
+    return activity_name;
+  }
+
+
+  /////Проверяет активирована ли переданная активность в контроллере (зажата ли одна из соотвествующих этой активности кнопок)
+
+  isActionActive(action_name){
+
+    var action = this.activities[action_name];
+    if( !action ) return false;
+    return action.is_active;
     
   };
 
   /////Проверяет нажата ли переданная кнопка в контроллере
 
-  isKeyPressed(key, code){
-    var result = false;
-    if (key === code){
-      result = true;
-    }
-    return result;
+  isKeyPressed(keyCode){
+    return this.actions_by_keycode[keyCode].is_pressed;
   }
 
   /////Активирует объявленную активность
 
-  enableAction(action_name, event){
-    console.log(this.isActionActive( action_name, event ));
-
-    if (this.isActionActive( action_name, event ))
-      this.activities[ action_name ].isEnabled = true
-
-    console.log("enableAction: ", this.activities[ action_name ].isEnabled)
+  enableAction(action_name){
+    // console.log(this.isActionActive( action_name, event ));
+    var action = this.activities[ action_name ];
+    if( !action ) return;
+    // if (this.isActionActive( action_name, event ))
+    action.is_enabled = true;
+    
+    // console.log("enableAction, is_enabled: ", this.activities[ action_name ].is_enabled)
   };
   
   /////Дезактивирует объявленную активность
 
-  disableAction(action_name, event){
-    if (this.isActionActive( action_name, event )){
-      this.activities[ action_name ].isEnabled = false;
-    }
+  disableAction(action_name){
 
-    console.log("disableAction: ", this.activities[ action_name ].isEnabled)
+    var action = this.activities[ action_name ];
+    if( !action ) return;
+    action.is_enabled = false;
+
   };
 
-  bindActions(activities){
-     for( var activity_name in activities ){
-      var activity = activities[ activity_name ];
-      this.activities[ activity_name ] = {
-        keys: activity.keys,
-        isEnabled: activity.isEnabled
-      }
-    }
+  //
+  isActionEnabled(action_name){
+    var action = this.activities[ action_name ];
+    if( !action ) return;
+    return action.is_enabled;
   }
+
 }

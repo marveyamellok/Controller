@@ -5,17 +5,15 @@ document.addEventListener("DOMContentLoaded", function() {
   mc.bindActions({
     "left":{
       keys: [ mc.KEYCODES.KEY_A,  mc.KEYCODES.LEFT_ARROW],
-      isEnabled: false
+      // is_enabled: !true
     },
     "right":{
       keys: [ mc.KEYCODES.RIGHT_ARROW, mc.KEYCODES.KEY_D ],
-      isEnabled: true
+      // is_enabled: true
     }
   });
   
-  // mc.attachToDOM( window, "left");
-  mc.attachToDOM( window, "right");
-  // mc.detachOfDOM( window, "left");
+  mc.attachToDOM( window );
 
   // mc.isKeyPressed(97) //KEY_A
 
@@ -26,13 +24,26 @@ document.addEventListener("DOMContentLoaded", function() {
   //   console.log('ACTION_FIRED: ', data );
   //   switch(data.action){
   //     case "left":
+  //       console.log("left");
   //       break;
   //     case "right":
+  //       console.log("right");
   //       break;
   //   }
 
   // });
 
+  setInterval(function(){
+    console.log("left:", mc.isActionActive('left') );
+  });
 
+  window.isKeyPressed = function(){
+    console.log( "TEST: isKeyPressed:", mc.isKeyPressed(mc.KEYCODES.LEFT_ARROW) );
+  }
+
+  window.disableAction = function(){
+    mc.disableAction('left')
+    console.log( "TEST: disableAction:" );
+  }
 
 });
