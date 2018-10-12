@@ -11,14 +11,16 @@
     
     <div id="main">
       
-      <input type="text" id="input_1">
-      <input type="submit" value="Go !" id="submit_1">
+      <!-- <input type="text" id="input_1">
+      <input type="submit" value="Go !" id="submit_1"> -->
       <button onclick="isKeyPressed()">isKeyPressed</button>
       <button onclick="disableAction()">disableAction</button>
-      <div id="play-field" class="play-field" tabindex = "0">
+      <button onclick="moveBall()">Move Ball</button>
+      <!-- <div id="play-field" class="play-field" tabindex = "0" mouseover = "test()">
         <div id="grass" class="grass"></div>
         <div id="ball" class="ball" style=""></div>
-      </div>
+      </div> -->
+      <canvas id="canvas" width="640" height="480" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;"></canvas>
     </div>
   </body>
 </html>

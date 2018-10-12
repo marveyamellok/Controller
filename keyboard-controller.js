@@ -57,9 +57,6 @@ class MyController {
 
   }
 
-
-
-
   // ============================================================
 
   bindActions(activities){
@@ -77,7 +74,6 @@ class MyController {
       }
 
       activity.keys.forEach(function(e,i){
-        // console.log('>', i, e );
         scope.actions_by_keycode[e] = {
           action: activity_name,
           is_pressed: false
@@ -89,6 +85,7 @@ class MyController {
 
 
   // ============================================================
+
   attachToDOM(DOM_target) {
     this.DOM_target = DOM_target;
     DOM_target.addEventListener( 'keydown', this.onKeyDown.bind(this), false );
@@ -105,28 +102,26 @@ class MyController {
   onKeyDown(event){
     var activity_name = this.getActivityByKeycode(event.keyCode);
     if( !activity_name || !this.isActionEnabled(activity_name) ) return;
-    // console.log("onKeyDown: ", event.keyCode, activity_name, this.isActionEnabled(activity_name) );
+
     this.actions_by_keycode[event.keyCode].is_pressed = true;
 
     var action = this.activities[activity_name];
     if( action.is_active ) return;
     console.log("activate action: ", activity_name );
     action.is_active = true;
-    // this.enableAction(activity_name);
   }
 
   onKeyUp(event){
     
     var activity_name = this.getActivityByKeycode(event.keyCode);
     if( !activity_name || !this.isActionEnabled(activity_name) ) return;
-    // console.log("onKeyUp: ", event.keyCode, activity_name );
+
     this.actions_by_keycode[event.keyCode].is_pressed = false;
 
     var action = this.activities[activity_name];
-    // if( !action.is_enabled ) return;
-    console.log("DEactivate action: ", activity_name );
+
+    console.log("Deactivate action: ", activity_name );
     action.is_active = false;
-    // this.disableAction(activity_name);
   }
 
 
@@ -145,7 +140,6 @@ class MyController {
   /////Проверяет активирована ли переданная активность в контроллере (зажата ли одна из соотвествующих этой активности кнопок)
 
   isActionActive(action_name){
-
     var action = this.activities[action_name];
     if( !action ) return false;
     return action.is_active;
@@ -161,13 +155,9 @@ class MyController {
   /////Активирует объявленную активность
 
   enableAction(action_name){
-    // console.log(this.isActionActive( action_name, event ));
     var action = this.activities[ action_name ];
     if( !action ) return;
-    // if (this.isActionActive( action_name, event ))
     action.is_enabled = true;
-    
-    // console.log("enableAction, is_enabled: ", this.activities[ action_name ].is_enabled)
   };
   
   /////Дезактивирует объявленную активность
