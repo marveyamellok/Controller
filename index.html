@@ -3,24 +3,24 @@
   <head>
     <meta charset="utf-8">
     <link href="style.css" rel="stylesheet">
-    <script type="text/javascript" src="keyboard-controller.js"></script>
-    <script type="text/javascript" src="keyboard-controller-test.js"></script>
-    <script type="text/javascript" src="ball-move.js"></script>
   </head>
   <body>
-    
-    <div id="main">
-      
-      <!-- <input type="text" id="input_1">
-      <input type="submit" value="Go !" id="submit_1"> -->
+    <div class="buttons">
       <button onclick="isKeyPressed()">isKeyPressed</button>
       <button onclick="disableAction()">disableAction</button>
       <button onclick="moveBall()">Move Ball</button>
-      <!-- <div id="play-field" class="play-field" tabindex = "0" mouseover = "test()">
-        <div id="grass" class="grass"></div>
-        <div id="ball" class="ball" style=""></div>
-      </div> -->
-      <canvas id="canvas" width="640" height="480" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;"></canvas>
+      <button onclick="playSnake()">Play Snake</button>
     </div>
+    <div id="main" class="main">
+      <div class="score">0</div>
+      <canvas id="canvas" width="632" height="632" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;"></canvas>
+    </div>
+
+    <script type="text/javascript" src="keyboard-controller.js" defer></script>
+    <script type="text/javascript" src="ball-move.js" defer></script>
+    <script type="text/javascript" src="keyboard-controller-test.js" defer></script>
+    <script type="text/javascript" src="snake.js" defer></script>
+    <script src='http://code.jquery.com/jquery-latest.js'></script>
+
   </body>
 </html>

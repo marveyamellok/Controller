@@ -1,5 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-
 ////////////////////game//////////////////////
 
   var _renderer = (function() {
@@ -152,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function() {
         this.x += this.speed;
       };
 
-      if (mc.isActionActive("jump")){
+      if (mc.isActionActive("up")){
         jumpPressed = true;
       };
 
@@ -201,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   var shelf = {
     x: 100,
-    y: 200,
+    y: height - 300,
     width: 170,
     height: 30,
     color: "brown",
@@ -210,12 +208,3 @@ document.addEventListener("DOMContentLoaded", function() {
       drawRect(this.x, this.y, this.width, this.height, this.color);
     }
   }
-
-  function createStage(){
-    fillAll("#8ddef8");
-    grass.draw();
-  }
-  createStage();
-
-
-});
