@@ -51,7 +51,7 @@ body{
   position: absolute;
   width: 632px;
   height: 60px;
-  border: 2px solid black;
+  border: 5px solid black;
   border-radius: 10px;
   top: -90px;
   font-size: 36px;
@@ -61,7 +61,7 @@ body{
   font-weight: bold;
   text-align: center;
   line-height: 62px;
-  background-color: #65a74c;
+  /*background-color: #65a74c;*/
 }
 
 canvas{

@@ -31,34 +31,6 @@
 
 //////////////////graph/////////////////////////////
 
-  var canvas, ctx, width, height; 
-  canvas = document.getElementById("canvas");
-  width = canvas.width;
-  height = canvas.height;
-  ctx = canvas.getContext('2d'); 
-
-
-  function fillAll(color){
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, width, height)
-  };
-
-  function drawRect(x, y, w, h, color){
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
-  };
-
-  function drawCircle(x, y, r, color){
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, 2 * Math.PI, false);
-    ctx.fill();
-  }; 
-
-  function drawImage(x, y, w, h, img){
-    ctx.drawImage(img, x, y, w, h);
-  };
-
   function isCollisionWidth(x1, w1, x2, w2){
     return ( x1 < x2 + w2 && 
              x1 + w1 > x2)

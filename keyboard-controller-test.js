@@ -1,6 +1,8 @@
 // document.addEventListener("DOMContentLoaded", function() {
 
   var mc = new MyController();
+  var flagBall = false;
+  var flagSnake = false;
 
   mc.bindActions({
     "left":{
@@ -46,23 +48,6 @@
   
   // createStage();
 
-  function createStage(isGrass){
-    fillAll("#8ddef8");
-    if (!isGrass) return;
-    grass.draw();
-  }
-
-  var ballMoveEvent = new CustomEvent("ballMoving");
-  var playSnakeEvent = new CustomEvent("playSnake");
-
-  window.moveBall = function(){
-    canvas.dispatchEvent(ballMoveEvent);
-  };
-
-  window.playSnake = function(){
-    canvas.dispatchEvent(playSnakeEvent);
-  };
-
   var gameBall = function(){
     createStage(true);
     ball.draw();
@@ -82,12 +67,90 @@
     drawScore();
   };
 
-  canvas.addEventListener("ballMoving", function() {
-    startGame(gameBall);
-  })
+  function createStage(isGrass){
+    fillAll("#8ddef8");
+    if (!isGrass) return;
+    grass.draw();
+  }
 
-  canvas.addEventListener("playSnake", function() {
-    init()
+  var ballMoveEvent = new CustomEvent("ballMoving");
+  var playSnakeEvent = new CustomEvent("playSnake");
+
+  // function moveBall(){
+  //   canvas.dispatchEvent(ballMoveEvent);
+  //   console.log("1");
+  // };
+
+  // function playSnake(){
+  //   canvas.dispatchEvent(playSnakeEvent);
+  //   console.log("2")
+  // };
+
+  // function beginSnake(){
+  //   snakeFlag = true;
+  //   ballFlag = false;
+  //   init()
+  //   apple.createApple();
+  //   startNewGame(gameSnake);
+  //   // canvas.removeEventListener("ballMoving", beginBall)
+  //   console.log("snake");
+  // }
+
+  // function beginBall(){
+  //   startGame(gameBall);
+  //   // canvas.removeEventListener("playSnake", beginSnake)
+  // }
+  // var ballInterval;
+
+
+  // canvas.addEventListener("ballMoving", function(){
+  //   // startGame(gameBall);
+  //   ballInterval = null
+  //   ballInterval = setInterval(gameBall, 1000 / 60);
+  //   interval = null;
+  // })
+
+
+  // canvas.addEventListener("playSnake", function(){
+  //   apple.createApple();
+  //   // startNewGame(gameSnake);
+  //   fillAll("white");
+  //   console.log("ballInterval: ", ballInterval);
+  //   interval = setInterval(gameSnake, 200);
+  //   ballInterval = null;
+  //   console.log("ballInterval: ", ballInterval);
+  // })
+
+
+
+  function beginSnake(){
+    ballFlag = false;
+    if (flagSnake) return; 
     apple.createApple();
+    // canvas.removeEventListener("ballMoving", beginBall)
     startNewGame(gameSnake);
-  })
+    flagSnake = true;
+    // console.log("snake");
+  }
+
+  function beginBall(){
+    flagSnake = false;
+    if (flagBall) return; 
+    // canvas.removeEventListener("playSnake",  beginSnake)
+    startGame(gameBall);
+    flagBall = true;
+    // console.log("ball");
+    console.log("addEventListener");
+  }
+
+  window.moveBall = function(){  
+    canvas.dispatchEvent(ballMoveEvent);
+    console.log("dispach");
+  };
+
+  window.playSnake = function(){
+    canvas.dispatchEvent(playSnakeEvent);
+  };
+
+  canvas.addEventListener("ballMoving", beginBall)
+  canvas.addEventListener("playSnake",  beginSnake)

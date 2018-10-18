@@ -1,42 +1,5 @@
 /////////////////////////graph/////////////////////////////////////////
 
-var canvas, ctx, width, heigth, accessKeyboard; 
-
-var init = function(){
-  canvas = document.getElementById("canvas");
-  width = canvas.width;
-  height = canvas.height;
-  ctx = canvas.getContext('2d');  
-};
-
-var fillAll = function(color){
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, width, height)
-};
-
-var clearAll = function(){
-  ctx.clearRect(0, 0, width, height)
-};
-
-var drawRect = function(x, y, w, h, color){
-  ctx.fillStyle = color;
-  ctx.fillRect(x, y, w, h);
-};
-
-var drawCircle = function(x, y, r, color){
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, 2 * Math.PI, false);
-  ctx.fill();
-};
-
-var isCollision = function(x1, y1, w1, h1, x2, y2, w2, h2){
-  return ( x1 < x2 + w2 && 
-           x1 + w1 > x2 && 
-           y1 < y2 + h2 && 
-           h1 + y1 > y2)
-}
-
 ///////////////////////////////apple///////////////////////////////////////
 
 var apple = {
@@ -72,16 +35,21 @@ var dir = "";
 var snake = [
   {
     x: 10,
-    y: 10
+    y: 10,
+
+    move: function(){
+
+    }
   }
 ];
 
 function moveSnake(){
   var x = 0;
   var y = 0;
-  var obj = {};
-  obj.x = snake[0].x;
-  obj.y = snake[0].y;
+  var obj = {
+    x: snake[0].x,
+    y: snake[0].y
+  };
 
   if (accessKeyboard){
     if (mc.isActionActive("left")) dir = "left";
@@ -128,10 +96,11 @@ function aboutCollision(){
   }
 }
 
-function addSnake(x,y){
-  var obj = {};
-  obj.x = x;
-  obj.y = y;
+function addBlockToSnake(X,Y){
+  var obj = {
+    x: X,
+    y: Y
+  };
   snake.unshift(obj);
   apple.createApple();
   score++;
@@ -146,7 +115,7 @@ function testCollision(){
   if (dir == "bottom") y += 1;
 
   if (apple.x == x && apple.y == y){
-    addSnake(x,y);
+    addBlockToSnake(x,y);
     return;
   }
 
@@ -164,9 +133,7 @@ function drawSnake(){
 
 ///////////////////////game//////////////////////////
 
-var startNewGame = function(game){
-  setInterval(game, 200);
-};
+
 
 function drawScore(){
   var $board = $(".score");
